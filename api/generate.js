@@ -1,6 +1,6 @@
 export const config = {
     api: {
-        bodyParser: false,
+        bodyParser: false, // Disabling body parser to handle raw body
     },
 };
 
@@ -13,38 +13,55 @@ export default async function handler(req, res) {
     try {
         const targetUrl = 'https://ai.twoblk.workers.dev/generate';
 
-        // Construct headers, filtering out those that node-fetch/underlying http handles automatically
-        // or that cause issues (like host)
+        // 1. Buffer the body to calculate correct Content-Length and avoid stream issues
+        const chunks = [];
+        for await (const chunk of req) {
+            chunks.push(chunk);
+        }
+        const bodyBuffer = Buffer.concat(chunks);
+
+        // 2. Prepare headers
         const headers = new Headers();
+        // Copy safe headers from original request
         Object.entries(req.headers).forEach(([key, value]) => {
-            // Filter out standard hop-by-hop headers and Host
-            if (!['host', 'connection', 'content-length', 'transfer-encoding', 'content-encoding'].includes(key.toLowerCase())) {
-                headers.append(key, value);
+            const lowerKey = key.toLowerCase();
+            // Skip headers that we will manage explicitly or that are hop-by-hop
+            if (!['host', 'content-length', 'connection'].includes(lowerKey)) {
+                if (Array.isArray(value)) {
+                    value.forEach(v => headers.append(key, v));
+                } else {
+                    headers.append(key, value);
+                }
             }
         });
 
-        // Explicitly inject the X-Platform header
+        // 3. FORCE the required custom header (Override if exists)
         headers.set('X-Platform', 'imageeditor');
 
-        // Fetch from external API
-        // We pass req as the body stream. 'duplex: half' is required for Node.js fetch with streams.
+        // 4. Set Content-Length explicitly
+        headers.set('Content-Length', bodyBuffer.length.toString());
+
+        // Debugging logs to verify headers in Vercel functionality
+        console.log('Proxying request to:', targetUrl);
+        console.log('X-Platform Header Status:', headers.get('X-Platform'));
+
+        // 5. Make the request
         const response = await fetch(targetUrl, {
             method: 'POST',
             headers: headers,
-            body: req,
-            // @ts-ignore - duplex is needed for Node 18+ streams
-            duplex: 'half'
+            body: bodyBuffer
         });
 
-        // Handle the response
+        // 6. Handle Response
         const responseBody = await response.arrayBuffer();
 
-        // Forward relevant response headers
+        // Forward response headers
         res.setHeader('Content-Type', response.headers.get('content-type') || 'application/json');
         if (response.headers.get('content-disposition')) {
             res.setHeader('Content-Disposition', response.headers.get('content-disposition'));
         }
 
+        // Return the upstream status and body
         return res.status(response.status).send(Buffer.from(responseBody));
 
     } catch (error) {
