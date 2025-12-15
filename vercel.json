@@ -1,0 +1,8 @@
+{
+    "rewrites": [
+        {
+            "source": "/api/generate",
+            "destination": "https://ai.twoblk.workers.dev/generate"
+        }
+    ]
+}

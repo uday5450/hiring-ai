@@ -68,12 +68,12 @@ const GeneratedPost: React.FC<GeneratedPostProps> = ({ imageData, onStartOver, o
           className="w-full h-auto object-contain"
           onError={(e) => {
             // #region agent log
-            fetch('http://127.0.0.1:7243/ingest/283580bf-e924-425d-aebb-7c2dc7374e65', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'GeneratedPost.tsx:38', message: 'Image load error', data: {}, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'C' }) }).catch(() => { });
+            // fetch('http://127.0.0.1:7243/ingest/283580bf-e924-425d-aebb-7c2dc7374e65', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'GeneratedPost.tsx:38', message: 'Image load error', data: {}, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'C' }) }).catch(() => { });
             // #endregion
           }}
           onLoad={() => {
             // #region agent log
-            fetch('http://127.0.0.1:7243/ingest/283580bf-e924-425d-aebb-7c2dc7374e65', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'GeneratedPost.tsx:44', message: 'Image loaded successfully', data: {}, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'C' }) }).catch(() => { });
+            // fetch('http://127.0.0.1:7243/ingest/283580bf-e924-425d-aebb-7c2dc7374e65', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'GeneratedPost.tsx:44', message: 'Image loaded successfully', data: {}, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'C' }) }).catch(() => { });
             // #endregion
           }}
         />

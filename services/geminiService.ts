@@ -29,7 +29,7 @@ const getAPIKeys = (): string[] => {
     });
 
     // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/283580bf-e924-425d-aebb-7c2dc7374e65', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'geminiService.ts:4', message: 'API keys loaded', data: { keyCount: apiKeys.length, apiKeyPrefix: apiKeys[0]?.substring(0, 10) || 'none' }, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'A' }) }).catch(() => { });
+    // fetch('http://127.0.0.1:7243/ingest/283580bf-e924-425d-aebb-7c2dc7374e65', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'geminiService.ts:4', message: 'API keys loaded', data: { keyCount: apiKeys.length, apiKeyPrefix: apiKeys[0]?.substring(0, 10) || 'none' }, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'A' }) }).catch(() => { });
     // #endregion
   }
   return apiKeys;
@@ -71,7 +71,7 @@ const createPlaceholderImage = (aspectRatio: string): string => {
 
 export const generateHiringPost = async (details: JobDetails, logo: string | null, referenceImage: string | null, mode: 'form' | 'prompt', userPrompt: string, isRegeneration: boolean = false): Promise<string> => {
   // #region agent log
-  fetch('http://127.0.0.1:7243/ingest/283580bf-e924-425d-aebb-7c2dc7374e65', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'geminiService.ts:18', message: 'generateHiringPost entry', data: { mode, hasLogo: !!logo, hasReferenceImage: !!referenceImage, hasUserPrompt: !!userPrompt, isRegeneration }, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'D' }) }).catch(() => { });
+  // fetch('http://127.0.0.1:7243/ingest/283580bf-e924-425d-aebb-7c2dc7374e65', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'geminiService.ts:18', message: 'generateHiringPost entry', data: { mode, hasLogo: !!logo, hasReferenceImage: !!referenceImage, hasUserPrompt: !!userPrompt, isRegeneration }, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'D' }) }).catch(() => { });
   // #endregion
   const aspectRatio = details.aspectRatio || '1:1';
 
@@ -186,7 +186,7 @@ const generateWithAlternativeAPI = async (
 
     formData.append('prompt', apiPrompt);
     // formData.append('model', 'nano');
-    formData.append('sub_type', 2);
+    formData.append('sub_type', '2'); // Using string '2' as per curl example
     formData.append('aspect_ratio', apiAspectRatio);
 
     console.log('📤 Sending request to alternative API...', {
@@ -195,9 +195,12 @@ const generateWithAlternativeAPI = async (
       promptLength: apiPrompt.length
     });
 
-    // Use proxy to avoid CORS issues
+    // Using proxy to bypass CORS restrictions
     const response = await fetch('/api/generate', {
       method: 'POST',
+      headers: {
+        'X-Platform': 'imageeditor'
+      },
       body: formData
     });
 
