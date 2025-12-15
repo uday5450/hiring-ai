@@ -1,0 +1,5 @@
+{
+  "name": "Hiring Post Generator AI",
+  "description": "An AI-powered application that generates perfectly designed, industry-ready hiring posts based on user-provided details like job title, experience, and responsibilities. The app uses AI to craft engaging and professional content to attract top talent.",
+  "requestFramePermissions": []
+}

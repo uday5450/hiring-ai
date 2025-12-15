@@ -1,0 +1,33 @@
+/* Custom styles for Hiring Post Generator AI */
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+body {
+  background-color: #f8fafc; /* bg-slate-50 equivalent */
+}
+
+#root {
+  min-height: 100%;
+  width: 100%;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
