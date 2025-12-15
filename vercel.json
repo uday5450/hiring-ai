@@ -1,8 +1,8 @@
 {
-    "rewrites": [
-        {
-            "source": "/api/generate",
-            "destination": "https://ai.twoblk.workers.dev/generate"
+    "functions": {
+        "api/*.js": {
+            "memory": 1024,
+            "maxDuration": 60
         }
-    ]
+    }
 }
